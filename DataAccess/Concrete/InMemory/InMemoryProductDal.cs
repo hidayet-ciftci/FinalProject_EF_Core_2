@@ -1,4 +1,5 @@
 ﻿using DataAccess.Abstract;
+using Entities.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace DataAccess.Concrete.InMemory
         public void Add(Product product)
         {
             _products.Add(product);
+            
         }
 
         public void Delete(Product product)
@@ -52,5 +54,6 @@ namespace DataAccess.Concrete.InMemory
         {
            return _products.Where(p => p.CategoryId == categoryId).ToList();
         }
+      
     }
 }
