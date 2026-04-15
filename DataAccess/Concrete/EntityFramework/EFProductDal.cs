@@ -1,5 +1,6 @@
 ﻿using DataAccess.Abstract;
 using Entities.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,26 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EFProductDal : IProductDal
     {
+
         public void Add(Product entity)
         {
-            throw new NotImplementedException();
+            // Idisposable pattern implamentation of C#
+            using (NorthwindContext context=new NorthwindContext())
+            {
+                var addedEntity = context.Entry(entity); // referansı yakalamak için kullanıyor.
+                addedEntity.State = EntityState.Added; // eklenecek bir nesne olduğunu belirt
+                context.SaveChanges(); // değişikliği gerçekleştir ve kaydet.
+            }
         }
 
         public void Delete(Product entity)
         {
-            throw new NotImplementedException();
+            using (NorthwindContext context = new NorthwindContext())
+            {
+                var deletedEntity = context.Entry(entity); // referansı yakalamak için kullanıyor.
+                deletedEntity.State = EntityState.Deleted; // Silinecek bir nesne olduğunu belirt
+                context.SaveChanges(); // değişikliği gerçekleştir ve kaydet.
+            }
         }
 
         public Product Get(Expression<Func<Product, bool>> filter)
@@ -38,7 +51,12 @@ namespace DataAccess.Concrete.EntityFramework
 
         public void Update(Product entity)
         {
-            throw new NotImplementedException();
+            using (NorthwindContext context = new NorthwindContext())
+            {
+                var updatedEntity = context.Entry(entity); // referansı yakalamak için kullanıyor.
+                updatedEntity.State = EntityState.Modified; // güncellenecek bir nesne olduğunu belirt
+                context.SaveChanges(); // değişikliği gerçekleştir ve kaydet.
+            }
         }
     }
 }
