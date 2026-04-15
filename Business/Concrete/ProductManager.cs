@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Abstract;
@@ -14,32 +15,28 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productDal;
-        InMemoryProductDal InMemoryProductDal;
         public ProductManager(IProductDal productDal)
         {
             _productDal = productDal;
-            InMemoryProductDal = new InMemoryProductDal();
-        }
-        public void WrongAdd(Product product)
-        {
-            InMemoryProductDal.Add(product);
-        }
-
-        public List<Product> WrongGetAll()
-        {
-            // iş kodları new kullanmaz!!
-            return InMemoryProductDal.GetAll();
-
-        }
+        }   
+        
         public List<Product> GetAll()
         {
             // iş kodları new kullanmaz!!
             return _productDal.GetAll();
             
         }
-        public void Add(Product product)
+
+        public List<Product> GetAllByCategoryId(int id)
         {
-            _productDal.Add(product);
+            return _productDal.GetAll(p=>p.CategoryId==id);
+        }
+
+        public List<Product> GetByUnitPrice(decimal min, decimal max)
+        {
+            return _productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max);
         }
     }
 }
+
+
