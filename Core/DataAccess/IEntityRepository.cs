@@ -1,13 +1,7 @@
-﻿using Entities.Abstract;
-using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Core.Entities;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataAccess.Abstract
+namespace Core.DataAccess
 {
     // where T: a,b,c ile yapısı T generic constraint koyarız. -> T nin a,b,c ye uygun olmalı
     // class -> referans olmalı , int double string olamaz
