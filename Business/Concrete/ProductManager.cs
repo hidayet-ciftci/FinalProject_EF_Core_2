@@ -14,9 +14,22 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productDal;
+        InMemoryProductDal InMemoryProductDal;
         public ProductManager(IProductDal productDal)
         {
             _productDal = productDal;
+            InMemoryProductDal = new InMemoryProductDal();
+        }
+        public void WrongAdd(Product product)
+        {
+            InMemoryProductDal.Add(product);
+        }
+
+        public List<Product> WrongGetAll()
+        {
+            // iş kodları new kullanmaz!!
+            return InMemoryProductDal.GetAll();
+
         }
         public List<Product> GetAll()
         {
