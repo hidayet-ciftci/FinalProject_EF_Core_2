@@ -1,5 +1,8 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Business.Abstract;
 using Business.Concrete;
+using Business.DependencyResolvers.Autofac;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 
@@ -9,8 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddSingleton<IProductService, ProductManager>();
-builder.Services.AddSingleton<IProductDal, EFProductDal>();
+//builder.Services.AddSingleton<IProductService, ProductManager>();
+//builder.Services.AddSingleton<IProductDal, EFProductDal>();
+
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory(options =>
+    options.RegisterModule(new AutofacBusinessModule())
+));
 
 // Üstteki yapı IoC ! IProductService çağrıldığı zaman ,
 // ProductManager oluştur 1 kere (singletaion)
