@@ -3,6 +3,7 @@ using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -22,9 +23,16 @@ namespace Business.Concrete
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-                //business codes
-                _productDal.Add(product);
-                return new SuccessResult(Messages.ProductAdded);
+            //business codes
+            IResult result =BusinessRules.Run(CheckIfProductIsExist(product.ProductName)
+                ,CheckIfProductCountOfCategoryCorrect(product.CategoryId));
+            
+            if (result != null)
+            {
+                return result;
+            }
+            _productDal.Add(product);
+            return new SuccessResult(Messages.ProductAdded);
         }
 
         public IDataResult<List<Product>> GetAll()
@@ -62,6 +70,30 @@ namespace Business.Concrete
             }
             return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails(), Messages.ProductsListed);
         }
+        [ValidationAspect(typeof(ProductValidator))]
+        public IResult Update(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        private IResult CheckIfProductCountOfCategoryCorrect(int categoryId)
+        {
+            var categoryNum = _productDal.GetAll(p => p.CategoryId == categoryId).Count;
+            if (categoryNum >= 15)
+            {
+                return new ErrorResult("Urun kategory sinirina ulasti");
+            }
+            return new SuccessResult();
+        }
+        private IResult CheckIfProductIsExist(string productName)
+        {
+            var result = _productDal.GetAll(p => p.ProductName == productName).Any();
+            if (result)
+            {
+                return new ErrorResult("Bu isimda baska urun var");
+            }
+            return new SuccessResult();
+        } 
     }
 }
 
