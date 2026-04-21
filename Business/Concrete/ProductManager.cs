@@ -6,6 +6,7 @@ using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using Entities.DTOs;
 
@@ -14,18 +15,20 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productDal;
+        ICategoryService _categoryService;
 
-        public ProductManager(IProductDal productDal)
+        public ProductManager(IProductDal productDal, ICategoryService categoryService)
         {
             _productDal = productDal;
+            _categoryService = categoryService;
         }
-
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
+            
             //business codes
             IResult result =BusinessRules.Run(CheckIfProductIsExist(product.ProductName)
-                ,CheckIfProductCountOfCategoryCorrect(product.CategoryId));
+                ,CheckIfProductCountOfCategoryCorrect(product.CategoryId), CheckCategoryNum());
             
             if (result != null)
             {
@@ -93,7 +96,17 @@ namespace Business.Concrete
                 return new ErrorResult("Bu isimda baska urun var");
             }
             return new SuccessResult();
-        } 
+        }
+        private IResult CheckCategoryNum()
+        {
+            
+            var result = _categoryService.GetAll().Data.Count;
+            if (result >15)
+            {
+                return new ErrorResult("kategory sayisi 15'i asti");
+            }
+            return new SuccessResult();
+        }
     }
 }
 
