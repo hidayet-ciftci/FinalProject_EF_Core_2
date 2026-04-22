@@ -4,6 +4,7 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Performance;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
@@ -134,17 +135,16 @@ namespace Business.Concrete
         //    return new SuccessResult();
         //}
 
-        //[TransactionScopeAspect]
-        //public IResult AddTransactionalTest(Product product)
-        //{
-        //    _productDal.Add(product);
-        //    if (24==25)
-        //    {
-        //        throw new Exception("error");
-        //    }
-        //    _productDal.Add(product);
-        //    return new SuccessResult();
-        //}
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(Product product)
+        {
+            _productDal.Add(product);
+            if (24 == 25)
+            {
+                throw new Exception("error");
+            }
+            return new SuccessResult();
+        }
     }
 }
 
