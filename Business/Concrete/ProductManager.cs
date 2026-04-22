@@ -1,17 +1,15 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspect.Autofac;
-using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
-using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using Entities.DTOs;
-
 namespace Business.Concrete
 {
     public class ProductManager : IProductService
@@ -44,6 +42,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
+        [PerformanceAspect(1)]
         public IDataResult<List<Product>> GetAll()
         {
             if (DateTime.Now.Hour == 05)
@@ -115,10 +114,37 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IResult AddTransactionalTest(Product product)
-        {
-            throw new NotImplementedException();
-        }
+        //public IResult AddTransactionalTest(Product product)
+        //{
+        //    using (TransactionScope scope = new TransactionScope())
+        //    {
+        //        try
+        //        {
+        //            Add(product);
+        //            scope.Complete();
+
+        //        }
+
+        //        catch (Exception ex)
+        //        {
+
+        //            scope.Dispose();
+        //        }
+        //    }
+        //    return new SuccessResult();
+        //}
+
+        //[TransactionScopeAspect]
+        //public IResult AddTransactionalTest(Product product)
+        //{
+        //    _productDal.Add(product);
+        //    if (24==25)
+        //    {
+        //        throw new Exception("error");
+        //    }
+        //    _productDal.Add(product);
+        //    return new SuccessResult();
+        //}
     }
 }
 
