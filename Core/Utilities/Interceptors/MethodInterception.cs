@@ -32,6 +32,8 @@ namespace Core.Utilities.Interceptors
             }
             OnAfter(invocation);
         }
+        // Intercept'i override ederek , onBefore(invocation) ile once intercept olarak attribute'un devreye girmesini sonra invocation.proceed()
+        // diyerek func'in calismasini saglariz.
     }
 
 

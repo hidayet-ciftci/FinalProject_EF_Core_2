@@ -14,6 +14,10 @@ namespace Core.Utilities.Interceptors
             {
 
             }
+
+            // Intercept castle.dynamicProxy'den gelen kesici , yani func çalışmadan önce devreye girmesini saglar
+            // invocation ise func'in tum bilgilerini tutar.
+            // Priority ise bir den fazla attribute kullanımı durumunda oncelik saglar
         }
     }
 
